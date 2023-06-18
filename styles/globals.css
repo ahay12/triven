@@ -1,26 +1,39 @@
-html,
-body {
+@tailwind base;
+@tailwind components;
+@font-face {
+  font-family: "adineue";
+  src: local('adineue'), url("/triven/font/adineue-PRO-Bold.ttf"), format("ttf");
+  font-weight: bold;
+  font-style: normal;
+}
+@tailwind utilities;
+
+html, body {
+  scroll-behavior: smooth;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Geneva, Tahoma, sans-serif;
+ 
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.hamburger-line{
+  @apply w-[30px] h-[2px] my-2 block bg-black;
 }
 
-* {
-  box-sizing: border-box;
+.hamburger-active > span:nth-child(1){
+  @apply rotate-45;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+.hamburger-active > span:nth-child(2){
+  @apply scale-0;
+}
+
+.hamburger-active > span:nth-child(3){
+  @apply -rotate-45;
+}
+
+.navbar-fixed {
+  @apply fixed z-[9999] bg-gray-100 opacity-80;
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 -1px 0 0 bg-gradient-to-r from-[#FF626D] to-[#FCAD72];
 }
