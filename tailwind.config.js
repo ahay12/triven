@@ -20,7 +20,7 @@ module.exports = {
       },
       colors: {
         primary: "#333235",
-        secondary: "",
+        secondary: "#232227",
       },
       dropShadow: {
         "cr": '0 35px 35px rgba(0, 0, 0)'

@@ -1,8 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { userService } from "../../services";
 
-export default function Header() {
+export default function Header({ Children }) {
+  const brands = [
+    { src: "/logo-brand/adidas.svg", height: 80, width: 80 },
+    { src: "/logo-brand/reebok.svg", height: 80, width: 80 },
+    { src: "/logo-brand/nike.svg", height: 80, width: 80 },
+    { src: "/logo-brand/converse.svg", height: 80, width: 80 },
+    { src: "/logo-brand/asics.svg", height: 80, width: 80 },
+    { src: "/logo-brand/puma.svg", height: 80, width: 80 },
+    { src: "/logo-brand/fila.svg", height: 80, width: 80 },
+    { src: "/logo-brand/vans.svg", height: 80, width: 80 },
+    { src: "/logo-brand/jordan.svg", height: 80, width: 80 },
+    { src: "/logo-brand/Vector.svg", height: 80, width: 80 },
+    { src: "/logo-brand/crocs.svg", height: 80, width: 80 },
+    { src: "/logo-brand/under-armour.svg", height: 80, width: 80 },
+  ];
+
+  const [open, setOpen] = useState("");
   function hamClick() {
     const hamburger = document.querySelector("#hamburger");
     const nav = document.querySelector("#nav-menu");
@@ -29,7 +46,12 @@ export default function Header() {
           <div className="flex items-center justify-between relative">
             <div className="flex px-4 md:max-lg:hidden">
               <Link href={"/#"} className="block py-6">
-                <Image src={"/Logo.svg"} alt="logo website" width={140} height={50} />
+                <Image
+                  src={"/Logo.svg"}
+                  alt="logo website"
+                  width={140}
+                  height={50}
+                />
               </Link>
             </div>
             <div
@@ -53,13 +75,33 @@ export default function Header() {
               >
                 <ul className="block font-semibold lg:flex lg:shadow-none lg:rounded-none md:flex md:shadow-none md:rounded-none">
                   <li className="group text-base text-white py-2 mx-8">
-                    <a href="/#">Home</a>
+                    <a href="/">Home</a>
                   </li>
                   <li className="group text-base text-white py-2 mx-8">
-                    <a href="/#catalog">Catalog</a>
+                    <a href="/catalog">Catalog</a>
                   </li>
-                  <li className="group text-base text-white py-2 mx-8">
-                    <a href="/#brands">Brands</a>
+                  <li
+                    onMouseLeave={() => setOpen(false)}
+                    className="group text-base text-white py-2 mx-8"
+                  >
+                    <button onMouseOver={() => setOpen(true)}>
+                      <span>Brands</span>
+                    </button>
+                    <ul
+                      className={`absolute grid grid-flow-row grid-cols-4 gap-14 px-10 -ml-64 bg-primary h-auto py-5 ${
+                        open ? "block" : "hidden"
+                      }`}
+                    >
+                      {brands.map((brand) => (
+                        <li>
+                          <Image
+                            key={brand}
+                            className="flex w-full items-center"
+                            {...brand}
+                          />
+                        </li>
+                      ))}
+                    </ul>
                   </li>
                   <li className="group text-base text-white py-2 mx-8">
                     <a href="/#contact">Contact</a>
@@ -70,14 +112,22 @@ export default function Header() {
             <div>
               <ul className="flex gap-5">
                 <li>
-                  <Link href={"/card"}>
+                  <Link href={"/chart"}>
                     <Image src={"cart.svg"} width={44} height={44} />
                   </Link>
                 </li>
                 <li>
-                  <Link href={"/login"}>
+                  <Link href={"/profile"}>
                     <Image src={"profile.svg"} width={44} height={44} />
                   </Link>
+                </li>
+                <li className="hover:cursor-pointer">
+                  <Image
+                    src={"/logout.svg"}
+                    width={44}
+                    height={44}
+                    onClick={userService.logout}
+                  />
                 </li>
               </ul>
             </div>
