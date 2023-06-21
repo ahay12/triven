@@ -1,41 +1,90 @@
 import Image from "next/image";
 import Copyright from "../components/Copyright";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import Header from "../components/Header";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { alertService, userService } from "../services";
 
 export default function Login() {
+  const router = useRouter();
+
+  // form validation rules
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required("Username is required"),
+    password: Yup.string().required("Password is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, formState } = useForm(formOptions);
+  const { errors } = formState;
+
+  function onSubmit({ username, password }) {
+    alertService.clear();
+    return userService
+      .login(username, password)
+      .then(() => {
+        // get return url from query parameters or default to '/'
+        const returnUrl = router.query.returnUrl || "/";
+        router.push(returnUrl);
+      })
+      .catch(alertService.error);
+  }
   return (
     <>
       <div className="w-full h-screen bg-gradient-to-r from-[#FF626D] to-[#FCAD72]">
         <div className="grid grid-cols-2 place-items-center">
-          <div className="pt-16">
-            <h1 className="text-[30px] p-6">
+          <div className="">
+            <h1 className="text-[30px] font-semibold p-6">
               Step in style to <br></br> own your{" "}
               <span className="text-white">dream</span> <br></br> shoes
             </h1>
-            <form>
-              <div className="w-[457px] h-[392px] bg-white/50 rounded-md">
+            <form onClick={handleSubmit(onSubmit)}>
+              <div className="w-[457px] h-auto bg-white/50 rounded-md">
                 <div className="container">
                   <div className="grid grid-rows-5 gap-5">
                     <div className="mt-3">
                       <h1 className="text-xl font-bold border-b-2 border-primary uppercase">
                         Masuk
                       </h1>
-                      <p>
-                        Apabila Anda Memiliki Akun, Masuk dengan alamat email.
-                      </p>
+                      <p>Apabila Anda Memiliki Akun, Masuk dengan username.</p>
                     </div>
                     <div>
-                      <h1>Email</h1>
-                      <input className="w-full h-[36px]" type={"email"}></input>
-                    </div>
-                    <div>
-                      <h1>Password</h1>
+                      <label>Username</label>
                       <input
-                        className="w-full h-[36px]"
-                        type={"password"}
-                      ></input>
+                        name={"username"}
+                        type={"text"}
+                        {...register("username")}
+                        className="w-full h-[36px] opacity-60"
+                        placeholder={"Masukan alamat email anda"}
+                      />
+                      <div className="invalid-feedback">
+                        {errors.username?.message}
+                      </div>
                     </div>
                     <div>
-                      <button className="w-full h-[36px] bg-primary text-white">
+                      <label>Password</label>
+                      <input
+                        name={"password"}
+                        {...register("password")}
+                        className="w-full h-[36px] opacity-60"
+                        type={"password"}
+                        placeholder={"Masukan password anda"}
+                      />
+                      <div className="invalid-feedback">
+                        {errors.password?.message}
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        disabled={formState.isSubmitting}
+                        className="w-full h-[36px] bg-primary text-white"
+                        type="submit"
+                      >
+                        {formState.isSubmitting}
                         Masuk
                       </button>
                     </div>
@@ -43,12 +92,12 @@ export default function Login() {
                       <div>Lupa Password?</div>
                       <div>
                         Belum punya akun?{" "}
-                        <a
-                          href=""
+                        <Link
+                          href="/registrasi"
                           className="text-transparent bg-clip-text bg-gradient-to-r from-[#FCAD72] to-[#FF626D]"
                         >
                           Registrasi
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
